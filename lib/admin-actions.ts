@@ -1,0 +1,135 @@
+'use server';
+
+import { revalidatePath } from 'next/cache';
+import prisma from './prisma';
+import { writeFile, mkdir } from 'fs/promises';
+import { join } from 'path';
+import { existsSync } from 'fs';
+
+// Upload image helper
+export async function uploadImage(formData: FormData) {
+  try {
+    const file = formData.get('file') as File;
+    if (!file) return { success: false, error: 'No file provided' };
+
+    const bytes = await file.arrayBuffer();
+    const buffer = Buffer.from(bytes);
+
+    // Make sure dir exists
+    const uploadDir = join(process.cwd(), 'public', 'uploads');
+    if (!existsSync(uploadDir)) {
+      await mkdir(uploadDir, { recursive: true });
+    }
+
+    const uniqueName = `${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.]/g, '')}`;
+    const path = join(uploadDir, uniqueName);
+    
+    await writeFile(path, buffer);
+    return { success: true, url: `/uploads/${uniqueName}` };
+  } catch (err) {
+    console.error(err);
+    return { success: false, error: 'Upload failed' };
+  }
+}
+
+// Add Product
+export async function addProduct(formData: FormData) {
+  try {
+    const title = formData.get('title') as string;
+    const description = formData.get('description') as string;
+    const price = parseFloat(formData.get('price') as string);
+    const category = formData.get('category') as string;
+    const badge = (formData.get('badge') as string) || null;
+    
+    // Parse sizes & images JSON
+    const sizes = formData.get('sizes') as string;
+    const images = formData.get('images') as string;
+
+    await prisma.product.create({
+      data: {
+        title,
+        description,
+        price,
+        category,
+        badge,
+        sizes,
+        images,
+        available: true,
+      }
+    });
+
+    revalidatePath('/admin');
+    revalidatePath('/admin/products');
+    revalidatePath('/shop');
+    return { success: true };
+  } catch (err) {
+    console.error(err);
+    return { success: false, error: 'Failed to add product' };
+  }
+}
+
+// Edit Product
+export async function editProduct(id: string, formData: FormData) {
+  try {
+    const title = formData.get('title') as string;
+    const description = formData.get('description') as string;
+    const price = parseFloat(formData.get('price') as string);
+    const category = formData.get('category') as string;
+    const badge = (formData.get('badge') as string) || null;
+    
+    // Parse sizes & images JSON
+    const sizes = formData.get('sizes') as string;
+    const images = formData.get('images') as string;
+
+    await prisma.product.update({
+      where: { id },
+      data: {
+        title,
+        description,
+        price,
+        category,
+        badge,
+        sizes,
+        images,
+      }
+    });
+
+    revalidatePath(`/admin/products/${id}/edit`);
+    revalidatePath('/admin/products');
+    revalidatePath(`/shop/${id}`);
+    revalidatePath('/shop');
+    return { success: true };
+  } catch (err) {
+    console.error(err);
+    return { success: false, error: 'Failed to edit product' };
+  }
+}
+
+// Delete Product
+export async function deleteProduct(id: string) {
+  try {
+    await prisma.product.delete({ where: { id } });
+    revalidatePath('/admin/products');
+    revalidatePath('/shop');
+    return { success: true };
+  } catch (err) {
+    console.error(err);
+    return { success: false, error: 'Failed to delete product' };
+  }
+}
+
+// Toggle Product Availability
+export async function toggleProductAvailability(id: string, available: boolean) {
+  try {
+    await prisma.product.update({ 
+      where: { id },
+      data: { available }
+    });
+    revalidatePath('/admin/products');
+    revalidatePath('/shop');
+    return { success: true };
+  } catch (err) {
+    console.error(err);
+    return { success: false, error: 'Failed to update availability' };
+  }
+}
