@@ -23,7 +23,7 @@ export async function uploadImage(formData: FormData) {
     return new Promise((resolve) => {
       cloudinary.uploader.upload_stream(
         { folder: 'fk_trend' },
-        (error, result) => {
+        (error: any, result: any) => {
           if (error) {
             console.error('Cloudinary upload error:', error);
             resolve({ success: false, error: 'Upload failed' });
@@ -33,7 +33,7 @@ export async function uploadImage(formData: FormData) {
         }
       ).end(buffer);
     });
-  } catch (err) {
+  } catch (err: any) {
     console.error('Upload catch error:', err);
     return { success: false, error: 'Upload failed' };
   }
