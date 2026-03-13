@@ -2,7 +2,8 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { updateStoreSettings, uploadImage } from '@/lib/admin-actions';
+import { updateStoreSettings, getCloudinarySignature } from '@/lib/admin-actions';
+import { uploadToCloudinary } from '@/lib/cloudinary-client';
 import { ImagePlus, Instagram, Youtube, Facebook, MapPin, Phone, Mail, MessageSquare, Save, X } from 'lucide-react';
 import Image from 'next/image';
 
@@ -53,16 +54,11 @@ export default function SettingsForm({ settings }: { settings: StoreSettings | n
     try {
       let finalProfilePic = profilePic;
 
-      // If there's a new profile file, upload it
+      // If there's a new profile file, upload it directly to Cloudinary
       if (profileFile) {
-        const formData = new FormData();
-        formData.append('file', profileFile);
-        const res = await uploadImage(formData);
-        if (res && res.success && res.url) {
-          finalProfilePic = res.url;
-        } else {
-          throw new Error('Failed to upload profile picture');
-        }
+        const signatureData = await getCloudinarySignature();
+        const url = await uploadToCloudinary(profileFile, signatureData as any);
+        finalProfilePic = url;
       }
 
       const formData = new FormData();

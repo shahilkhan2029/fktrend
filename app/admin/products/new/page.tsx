@@ -2,7 +2,8 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { addProduct, uploadImage } from '@/lib/admin-actions';
+import { addProduct, getCloudinarySignature } from '@/lib/admin-actions';
+import { uploadToCloudinary } from '@/lib/cloudinary-client';
 import { ImagePlus, X, ChevronLeft } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -62,18 +63,13 @@ export default function AddProductPage() {
         throw new Error('Please select at least one size.');
       }
 
-      // 1. Upload images sequentially
+      // 1. Upload images directly to Cloudinary using signed signature
+      const signatureData = await getCloudinarySignature();
       const uploadedUrls: string[] = [];
+      
       for (const file of images) {
-        const formData = new FormData();
-        formData.append('file', file);
-        const uploadRes = await uploadImage(formData);
-        
-        if (uploadRes && uploadRes.success && uploadRes.url) {
-          uploadedUrls.push(uploadRes.url);
-        } else {
-          throw new Error(uploadRes?.error || 'Failed to upload some images');
-        }
+        const url = await uploadToCloudinary(file, signatureData as any);
+        uploadedUrls.push(url);
       }
 
       // 2. Save product

@@ -11,7 +11,23 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-// Upload image helper
+// 1. Get Secret Signature for Client-Side Upload
+export async function getCloudinarySignature() {
+  const timestamp = Math.round(new Date().getTime() / 1000);
+  const signature = cloudinary.utils.api_sign_request(
+    { timestamp, folder: 'fk_trend' },
+    process.env.CLOUDINARY_API_SECRET!
+  );
+
+  return {
+    signature,
+    timestamp,
+    cloudName: process.env.CLOUDINARY_CLOUD_NAME,
+    apiKey: process.env.CLOUDINARY_API_KEY,
+  };
+}
+
+// Keep this for small uploads or backward compatibility
 export async function uploadImage(formData: FormData): Promise<{ success: boolean; url?: string; error?: string }> {
   try {
     const file = formData.get('file') as File;

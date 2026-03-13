@@ -2,7 +2,8 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { editProduct, uploadImage } from '@/lib/admin-actions';
+import { editProduct, getCloudinarySignature } from '@/lib/admin-actions';
+import { uploadToCloudinary } from '@/lib/cloudinary-client';
 import { ImagePlus, X, ChevronLeft } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -82,27 +83,17 @@ export default function EditProductForm({ product }: { product: Product }) {
       // 1. Upload new images sequentially
       const finalImageUrls: string[] = [];
       
-      for (let i = 0; i < imagePreviews.length; i++) {
-        const previewUrl = imagePreviews[i];
-        if (previewUrl.startsWith('blob:')) {
-          // Find the corresponding File by object URL or just upload the new files
-          // For a simpler approach, we'll just upload `newImages` that hasn't been removed.
-          // In a perfect system, we'd map them but since this is mock/demo:
-          // We assume any blob is from newImages.
-        } else {
-          finalImageUrls.push(previewUrl); 
-        }
-      }
+      // Determine which are existing URLs and which are new (blobs)
+      const existingUrls = imagePreviews.filter(p => !p.startsWith('blob:'));
+      const newFiles = newImages; // These correspond to the blobs in imagePreviews
 
-      // Upload newly added files
-      for (const file of newImages) {
-        // we only upload it if it's still in imagePreviews (we check by name or just upload all and then push to end)
-        // Simplest approach: just append all remaining new images
-        const formData = new FormData();
-        formData.append('file', file);
-        const uploadRes = await uploadImage(formData);
-        if (uploadRes && uploadRes.success && uploadRes.url) {
-          finalImageUrls.push(uploadRes.url);
+      finalImageUrls.push(...existingUrls);
+
+      if (newFiles.length > 0) {
+        const signatureData = await getCloudinarySignature();
+        for (const file of newFiles) {
+          const url = await uploadToCloudinary(file, signatureData as any);
+          finalImageUrls.push(url);
         }
       }
 
