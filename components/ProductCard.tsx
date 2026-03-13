@@ -39,40 +39,56 @@ export default function ProductCard({ id, title, price, category, imageUrl, badg
 
       {/* Content */}
       <div className="p-5 flex flex-col flex-grow">
-        <div className="text-xs text-zinc-500 uppercase tracking-wider mb-1 font-medium">{category}</div>
+        <div className="flex items-center justify-between mb-2">
+          <div className="text-[10px] text-zinc-400 uppercase tracking-[0.2em] font-black">{category}</div>
+          {badge && (
+            <div className="bg-black text-white text-[8px] font-black px-2 py-0.5 uppercase tracking-widest rounded-full">
+              {badge}
+            </div>
+          )}
+        </div>
+        
         <Link href={`/shop/${id}`}>
-          <h3 className="text-lg font-serif font-semibold text-zinc-900 mb-2 truncate group-hover:text-[var(--color-gold)] transition-colors">
+          <h3 className="text-base font-serif font-black text-zinc-900 mb-2 truncate group-hover:text-[var(--color-gold)] transition-colors tracking-tight leading-tight">
             {title}
           </h3>
         </Link>
-        <div className="text-xl font-medium text-zinc-900 mb-4">₹{price.toLocaleString('en-IN')}</div>
+
+        <div className="flex items-baseline gap-2 mb-4">
+          <div className="text-lg font-black text-zinc-900 tracking-tighter">₹{price.toLocaleString('en-IN')}</div>
+          <div className="text-[10px] text-zinc-400 line-through decoration-zinc-300 font-medium">₹{(price * 1.6).toLocaleString('en-IN')}</div>
+          <div className="text-[10px] font-bold text-[var(--color-gold)]">(37% OFF)</div>
+        </div>
         
-        {/* Sizes */}
-        <div className="flex flex-wrap gap-2 mb-6 min-h-[28px]">
-          {sizes && sizes.length > 0 ? sizes.map(size => (
-            <span key={size} className="text-xs font-medium border border-zinc-200 text-zinc-600 px-2.5 py-1 rounded-md">
+        {/* Sizes Chips */}
+        <div className="flex flex-wrap gap-1.5 mb-6 min-h-[24px]">
+          {sizes && sizes.length > 0 ? sizes.slice(0, 3).map(size => (
+            <span key={size} className="text-[9px] font-black uppercase tracking-widest border border-zinc-100 text-zinc-500 px-2 py-1 rounded-md bg-zinc-50/50">
               {size}
             </span>
           )) : (
-            <span className="text-xs font-medium border border-dashed border-zinc-200 text-zinc-400 px-2.5 py-1 rounded-md">
-              Any Size
+            <span className="text-[9px] font-black uppercase tracking-widest border border-dashed border-zinc-100 text-zinc-300 px-2 py-1 rounded-md">
+              Free Size
             </span>
+          )}
+          {sizes && sizes.length > 3 && (
+            <span className="text-[9px] font-black text-zinc-300 px-1 py-1">+{sizes.length - 3}</span>
           )}
         </div>
 
         {/* Action Buttons */}
-        <div className="mt-auto grid grid-cols-2 gap-3">
+        <div className="mt-auto grid grid-cols-2 gap-2">
           <Link 
             href={`/shop/${id}`} 
-            className="text-center text-sm font-medium border border-zinc-900 text-zinc-900 px-4 py-2.5 rounded-full hover:bg-zinc-50 transition-colors"
+            className="text-center text-[10px] font-black uppercase tracking-widest border border-zinc-900 text-zinc-900 px-3 py-3 rounded-xl hover:bg-zinc-900 hover:text-white transition-all"
           >
             Details
           </Link>
           <Link 
             href={`/shop/${id}?book=true`}
-            className="text-center text-sm font-medium bg-zinc-900 text-white px-4 py-2.5 rounded-full hover:bg-zinc-800 transition-colors shadow-md shadow-zinc-900/20"
+            className="text-center text-[10px] font-black uppercase tracking-widest bg-zinc-900 text-white px-3 py-3 rounded-xl hover:bg-zinc-800 transition-all shadow-lg shadow-zinc-900/10"
           >
-            Book Now
+            Reserve
           </Link>
         </div>
       </div>

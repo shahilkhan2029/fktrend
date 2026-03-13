@@ -10,9 +10,10 @@ interface ReserveModalProps {
   sizes: string[];
   isOpen: boolean;
   onClose: () => void;
+  user?: { id: string; email: string; name: string; phone?: string } | null;
 }
 
-export default function ReserveModal({ productId, productTitle, sizes, isOpen, onClose }: ReserveModalProps) {
+export default function ReserveModal({ productId, productTitle, sizes, isOpen, onClose, user }: ReserveModalProps) {
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [errorMsg, setErrorMsg] = useState('');
 
@@ -67,15 +68,16 @@ export default function ReserveModal({ productId, productTitle, sizes, isOpen, o
               
               <form action={clientAction} className="space-y-4">
                 <input type="hidden" name="productId" value={productId} />
+                <input type="hidden" name="userId" value={user?.id || ''} />
                 
                 <div>
                   <label htmlFor="name" className="block text-sm font-medium text-zinc-700 mb-1">Full Name</label>
-                  <input required type="text" id="name" name="name" className="w-full px-4 py-3 bg-zinc-50 border border-zinc-200 rounded-xl focus:ring-2 focus:ring-zinc-900 focus:border-transparent transition-all outline-none" placeholder="John Doe" />
+                  <input required type="text" id="name" name="name" defaultValue={user?.name || ''} className="w-full px-4 py-3 bg-zinc-50 border border-zinc-200 rounded-xl focus:ring-2 focus:ring-zinc-900 focus:border-transparent transition-all outline-none" placeholder="John Doe" />
                 </div>
                 
                 <div>
                   <label htmlFor="phone" className="block text-sm font-medium text-zinc-700 mb-1">Phone Number</label>
-                  <input required type="tel" id="phone" name="phone" className="w-full px-4 py-3 bg-zinc-50 border border-zinc-200 rounded-xl focus:ring-2 focus:ring-zinc-900 focus:border-transparent transition-all outline-none" placeholder="+1 (234) 567-8900" />
+                  <input required type="tel" id="phone" name="phone" defaultValue={user?.phone || ''} className="w-full px-4 py-3 bg-zinc-50 border border-zinc-200 rounded-xl focus:ring-2 focus:ring-zinc-900 focus:border-transparent transition-all outline-none" placeholder="+1 (234) 567-8900" />
                 </div>
                 
                 {sizes.length > 0 && (

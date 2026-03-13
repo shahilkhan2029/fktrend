@@ -34,24 +34,8 @@ export default async function ShopPage({
   if (sortOption === 'price-desc') products.sort((a,b) => b.price - a.price);
 
   return (
-    <div className="bg-zinc-50 min-h-screen py-12">
+    <div className="bg-white min-h-screen py-12">
       <div className="container mx-auto px-4">
-        
-        {/* Page Header */}
-        <div className="mb-12">
-          <h1 className="text-4xl font-serif font-bold text-zinc-900 mb-4">
-            {categoryFilter ? `${categoryFilter} Collection` : 'All Products'}
-          </h1>
-          <p className="text-zinc-600">
-            {products.length} {products.length === 1 ? 'item' : 'items'} found.
-            {categoryFilter && (
-              <Link href="/shop" className="ml-2 py-0.5 px-2 bg-zinc-200 hover:bg-zinc-300 rounded text-sm text-zinc-800 transition-colors">
-                Clear filter
-              </Link>
-            )}
-          </p>
-        </div>
-
         <div className="flex flex-col lg:flex-row gap-8">
           
           {/* Sidebar / Filters */}
@@ -77,9 +61,9 @@ export default async function ShopPage({
               
               <hr className="border-zinc-100 mb-8" />
               
-              {/* Categories */}
+              {/* Collections */}
               <div className="mb-8">
-                <h3 className="font-semibold text-zinc-900 mb-4 tracking-wide uppercase text-sm">Categories</h3>
+                <h3 className="font-semibold text-zinc-900 mb-4 tracking-wide uppercase text-sm">Collections</h3>
                 <ul className="space-y-3">
                   <li>
                     <Link href="/shop" className={`text-sm ${!categoryFilter ? 'text-[var(--color-gold)] font-medium' : 'text-zinc-600 hover:text-zinc-900'} transition-colors`}>
@@ -159,7 +143,7 @@ export default async function ShopPage({
           {/* Product Grid */}
           <main className="lg:w-3/4">
             {products.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+              <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5">
                 {products.map(product => (
                   <ProductCard
                     key={product.id}

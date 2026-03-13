@@ -26,6 +26,7 @@ model Product {
 model Booking {
   id        String   @id @default(cuid())
   productId String
+  userId    String?  // Associated user id if logged in
   name      String
   phone     String
   size      String
@@ -33,6 +34,7 @@ model Booking {
   createdAt DateTime @default(now())
   
   product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
 }
 
 model Category {
@@ -40,4 +42,31 @@ model Category {
   name      String   @unique
   icon      String?
   createdAt DateTime @default(now())
+}
+
+model StoreSettings {
+  id            String   @id @default("singleton")
+  email         String?
+  phone         String?
+  whatsapp      String?
+  address       String?
+  mapLocation   String?  // Google Maps Embed URL
+  instagramUrl  String?
+  facebookUrl   String?
+  youtubeUrl    String?
+  profilePic    String?  // URL to admin profile picture
+  updatedAt     DateTime @updatedAt
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  phone     String   @unique
+  password  String
+  role      String   @default("user") // "user" or "admin" (though we have a separate admin system)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  bookings  Booking[]
 }

@@ -133,3 +133,53 @@ export async function toggleProductAvailability(id: string, available: boolean) 
     return { success: false, error: 'Failed to update availability' };
   }
 }
+
+// Update Store Settings
+export async function updateStoreSettings(formData: FormData) {
+  try {
+    const email = formData.get('email') as string;
+    const phone = formData.get('phone') as string;
+    const whatsapp = formData.get('whatsapp') as string;
+    const address = formData.get('address') as string;
+    const mapLocation = formData.get('mapLocation') as string;
+    const instagramUrl = formData.get('instagramUrl') as string;
+    const facebookUrl = formData.get('facebookUrl') as string;
+    const youtubeUrl = formData.get('youtubeUrl') as string;
+    const profilePic = formData.get('profilePic') as string;
+
+    await prisma.storeSettings.upsert({
+      where: { id: 'singleton' },
+      update: {
+        email,
+        phone,
+        whatsapp,
+        address,
+        mapLocation,
+        instagramUrl,
+        facebookUrl,
+        youtubeUrl,
+        profilePic,
+      },
+      create: {
+        id: 'singleton',
+        email,
+        phone,
+        whatsapp,
+        address,
+        mapLocation,
+        instagramUrl,
+        facebookUrl,
+        youtubeUrl,
+        profilePic,
+      },
+    });
+
+    revalidatePath('/');
+    revalidatePath('/contact');
+    revalidatePath('/admin/settings');
+    return { success: true };
+  } catch (err) {
+    console.error(err);
+    return { success: false, error: 'Failed to update settings' };
+  }
+}

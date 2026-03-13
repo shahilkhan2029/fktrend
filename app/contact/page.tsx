@@ -1,6 +1,15 @@
 import { MapPin, Phone, Mail, Clock } from 'lucide-react';
+import { getStoreSettings } from '@/lib/actions';
 
-export default function ContactPage() {
+export default async function ContactPage() {
+  const settings = await getStoreSettings();
+
+  const address = settings?.address || '123 Fashion Street, Style District, City, Country 12345';
+  const phone = settings?.phone || '+1 (234) 567-8900';
+  const whatsapp = settings?.whatsapp || '12345678900';
+  const email = settings?.email || 'hello@fktrend.com';
+  const mapSrc = settings?.mapLocation || "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d113941.01166415712!2d80.84158485744474!3d26.81977717438497!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x399bfd991f32b16b%3A0x93ccba8909978be7!2sLucknow%2C%20Uttar%20Pradesh!5e0!3m2!1sen!2sin!4v1709477793444!5m2!1sen!2sin";
+
   return (
     <div className="bg-white min-h-screen py-16">
       <div className="container mx-auto px-4 max-w-6xl">
@@ -24,8 +33,7 @@ export default function ContactPage() {
                 <div>
                   <h3 className="font-bold text-zinc-900 mb-1">Address</h3>
                   <p className="text-zinc-600 leading-relaxed">
-                    123 Fashion Street, Style District<br />
-                    City, Country 12345
+                    {address}
                   </p>
                 </div>
               </div>
@@ -49,9 +57,10 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <h3 className="font-bold text-zinc-900 mb-1">Phone & WhatsApp</h3>
-                  <p className="text-zinc-600">
-                    <a href="tel:+12345678900" className="hover:text-zinc-900 transition-colors">+1 (234) 567-8900</a>
-                  </p>
+                  <div className="flex flex-col gap-1 text-zinc-600">
+                    <a href={`tel:${phone}`} className="hover:text-zinc-900 transition-colors uppercase font-medium tracking-tight whitespace-nowrap overflow-hidden text-ellipsis max-w-[200px] inline-block">{phone}</a>
+                    <a href={`https://wa.me/${whatsapp}`} target="_blank" rel="noopener noreferrer" className="hover:text-zinc-900 transition-colors text-sm font-bold text-green-600">WhatsApp Now</a>
+                  </div>
                 </div>
               </div>
               
@@ -62,7 +71,7 @@ export default function ContactPage() {
                 <div>
                   <h3 className="font-bold text-zinc-900 mb-1">Email</h3>
                   <p className="text-zinc-600">
-                    <a href="mailto:hello@fktrend.com" className="hover:text-zinc-900 transition-colors">hello@fktrend.com</a>
+                    <a href={`mailto:${email}`} className="hover:text-zinc-900 transition-colors">{email}</a>
                   </p>
                 </div>
               </div>
@@ -70,7 +79,7 @@ export default function ContactPage() {
 
             <div className="h-64 rounded-2xl overflow-hidden shadow-sm bg-zinc-200">
               <iframe 
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d113941.01166415712!2d80.84158485744474!3d26.81977717438497!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x399bfd991f32b16b%3A0x93ccba8909978be7!2sLucknow%2C%20Uttar%20Pradesh!5e0!3m2!1sen!2sin!4v1709477793444!5m2!1sen!2sin" 
+                src={mapSrc} 
                 width="100%" 
                 height="100%" 
                 style={{border: 0}} 

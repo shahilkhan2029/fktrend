@@ -20,6 +20,7 @@ export default function AdminLayout({
     { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
     { name: 'Products', href: '/admin/products', icon: ShoppingBag },
     { name: 'Bookings', href: '/admin/bookings', icon: CalendarCheck },
+    { name: 'Settings', href: '/admin/settings', icon: Settings },
   ];
 
   return (
