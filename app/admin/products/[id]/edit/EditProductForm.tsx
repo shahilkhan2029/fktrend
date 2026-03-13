@@ -50,10 +50,20 @@ export default function EditProductForm({ product }: { product: Product }) {
   };
 
   const removeImage = (index: number) => {
-    // If it's a new image (has a blob URL) vs an existing image URL
-    setImagePreviews(imagePreviews.filter((_, i) => i !== index));
-    // Note: To be fully robust we should remove from `newImages` if it's a new file, but for simplicity we rely on the previews count
-    // Real implementation would track IDs or type of image (existing vs new)
+    const previewToRemove = imagePreviews[index];
+    
+    // If it's a blob (newly added file), update newImages as well
+    if (previewToRemove.startsWith('blob:')) {
+      // Find which index in newImages this blob corresponds to
+      // A more robust way would be tracking by name, but we can filter by matching object URL logic or just filter newImages
+      // For now, let's just make sure we don't upload files that were removed
+      setNewImages(prev => prev.filter((_, i) => {
+        const url = imagePreviews.filter(p => p.startsWith('blob:'))[i];
+        return url !== previewToRemove;
+      }));
+    }
+    
+    setImagePreviews(prev => prev.filter((_, i) => i !== index));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {

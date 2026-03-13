@@ -72,7 +72,7 @@ export default function AddProductPage() {
         if (uploadRes && uploadRes.success && uploadRes.url) {
           uploadedUrls.push(uploadRes.url);
         } else {
-          throw new Error('Failed to upload some images');
+          throw new Error(uploadRes?.error || 'Failed to upload some images');
         }
       }
 

@@ -25,8 +25,11 @@ export async function uploadImage(formData: FormData): Promise<{ success: boolea
         { folder: 'fk_trend' },
         (error: any, result: any) => {
           if (error) {
-            console.error('Cloudinary upload error:', error);
-            resolve({ success: false, error: 'Upload failed' });
+            console.error('SERVER-SIDE CLOUDINARY ERROR:', error);
+            resolve({ 
+              success: false, 
+              error: error.message || 'Cloudinary upload failed' 
+            });
           } else {
             resolve({ success: true, url: result?.secure_url });
           }
@@ -34,8 +37,8 @@ export async function uploadImage(formData: FormData): Promise<{ success: boolea
       ).end(buffer);
     });
   } catch (err: any) {
-    console.error('Upload catch error:', err);
-    return { success: false, error: 'Upload failed' };
+    console.error('SERVER-SIDE CATCH ERROR:', err);
+    return { success: false, error: err.message || 'Upload failed' };
   }
 }
 
