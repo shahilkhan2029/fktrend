@@ -2,9 +2,14 @@
 
 import { revalidatePath } from 'next/cache';
 import prisma from './prisma';
-import { writeFile, mkdir } from 'fs/promises';
-import { join } from 'path';
-import { existsSync } from 'fs';
+import { v2 as cloudinary } from 'cloudinary';
+
+// Configure Cloudinary
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 // Upload image helper
 export async function uploadImage(formData: FormData) {
@@ -12,22 +17,24 @@ export async function uploadImage(formData: FormData) {
     const file = formData.get('file') as File;
     if (!file) return { success: false, error: 'No file provided' };
 
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
+    const arrayBuffer = await file.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
 
-    // Make sure dir exists
-    const uploadDir = join(process.cwd(), 'public', 'uploads');
-    if (!existsSync(uploadDir)) {
-      await mkdir(uploadDir, { recursive: true });
-    }
-
-    const uniqueName = `${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.]/g, '')}`;
-    const path = join(uploadDir, uniqueName);
-    
-    await writeFile(path, buffer);
-    return { success: true, url: `/uploads/${uniqueName}` };
+    return new Promise((resolve) => {
+      cloudinary.uploader.upload_stream(
+        { folder: 'fk_trend' },
+        (error, result) => {
+          if (error) {
+            console.error('Cloudinary upload error:', error);
+            resolve({ success: false, error: 'Upload failed' });
+          } else {
+            resolve({ success: true, url: result?.secure_url });
+          }
+        }
+      ).end(buffer);
+    });
   } catch (err) {
-    console.error(err);
+    console.error('Upload catch error:', err);
     return { success: false, error: 'Upload failed' };
   }
 }
