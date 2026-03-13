@@ -91,7 +91,7 @@ export default function EditProductForm({ product }: { product: Product }) {
         const formData = new FormData();
         formData.append('file', file);
         const uploadRes = await uploadImage(formData);
-        if (uploadRes.success && uploadRes.url) {
+        if (uploadRes && uploadRes.success && uploadRes.url) {
           finalImageUrls.push(uploadRes.url);
         }
       }

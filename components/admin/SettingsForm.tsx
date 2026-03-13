@@ -58,7 +58,7 @@ export default function SettingsForm({ settings }: { settings: StoreSettings | n
         const formData = new FormData();
         formData.append('file', profileFile);
         const res = await uploadImage(formData);
-        if (res.success && res.url) {
+        if (res && res.success && res.url) {
           finalProfilePic = res.url;
         } else {
           throw new Error('Failed to upload profile picture');

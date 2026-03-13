@@ -69,7 +69,7 @@ export default function AddProductPage() {
         formData.append('file', file);
         const uploadRes = await uploadImage(formData);
         
-        if (uploadRes.success && uploadRes.url) {
+        if (uploadRes && uploadRes.success && uploadRes.url) {
           uploadedUrls.push(uploadRes.url);
         } else {
           throw new Error('Failed to upload some images');
