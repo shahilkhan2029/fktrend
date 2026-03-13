@@ -72,9 +72,9 @@ export async function addProduct(formData: FormData) {
     revalidatePath('/admin/products');
     revalidatePath('/shop');
     return { success: true };
-  } catch (err) {
-    console.error(err);
-    return { success: false, error: 'Failed to add product' };
+  } catch (err: any) {
+    console.error('ADD PRODUCT ERROR:', err);
+    return { success: false, error: err.message || 'Failed to add product' };
   }
 }
 
@@ -109,9 +109,9 @@ export async function editProduct(id: string, formData: FormData) {
     revalidatePath(`/shop/${id}`);
     revalidatePath('/shop');
     return { success: true };
-  } catch (err) {
-    console.error(err);
-    return { success: false, error: 'Failed to edit product' };
+  } catch (err: any) {
+    console.error('EDIT PRODUCT ERROR:', err);
+    return { success: false, error: err.message || 'Failed to edit product' };
   }
 }
 
