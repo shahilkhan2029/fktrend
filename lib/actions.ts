@@ -122,20 +122,36 @@ export async function getCategories() {
       },
     });
 
-    const defaultImages: Record<string, string> = {
-      'Shirts': 'https://images.unsplash.com/photo-1596755094514-f87e32f85e2c?q=80&w=800&auto=format&fit=crop',
-      'T-Shirts': 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=800&auto=format&fit=crop',
-      'Jeans': 'https://images.unsplash.com/photo-1542272604-787c3835535d?q=80&w=800&auto=format&fit=crop',
-      'Kurtas': 'https://images.unsplash.com/photo-1583391733958-d150204b6118?q=80&w=800&auto=format&fit=crop',
-      'Jackets': 'https://images.unsplash.com/photo-1551028719-00167b16eac5?q=80&w=800&auto=format&fit=crop',
-      'Ethnic Wear': 'https://images.unsplash.com/photo-1627834241595-502a5e42a98f?q=80&w=800&auto=format&fit=crop',
-    };
+    // Fetch the latest product for each category to get its image
+    const categoriesWithImages = await Promise.all(
+      categories.map(async (c) => {
+        const latestProduct = await prisma.product.findFirst({
+          where: { 
+            category: c.category,
+            available: true 
+          },
+          orderBy: { createdAt: 'desc' },
+          select: { images: true }
+        });
 
-    return categories.map(c => ({
-      name: c.category,
-      count: c._count.category,
-      image: defaultImages[c.category] || 'https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?q=80&w=800&auto=format&fit=crop'
-    }));
+        let imageUrl = 'https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?q=80&w=800&auto=format&fit=crop';
+        
+        if (latestProduct && latestProduct.images) {
+          const imgs = safeParseJSON(latestProduct.images);
+          if (imgs.length > 0) {
+            imageUrl = imgs[0];
+          }
+        }
+
+        return {
+          name: c.category,
+          count: c._count.category,
+          image: imageUrl
+        };
+      })
+    );
+
+    return categoriesWithImages;
   } catch (error) {
     console.error('Fetch categories error:', error);
     return [];
