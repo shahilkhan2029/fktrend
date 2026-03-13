@@ -5,12 +5,13 @@ import Link from 'next/link';
 export default async function ShopPage({
   searchParams,
 }: {
-  searchParams: { category?: string, q?: string, sort?: string, size?: string }
+  searchParams: Promise<{ category?: string, q?: string, sort?: string, size?: string }>
 }) {
-  const categoryFilter = searchParams.category;
-  const searchQuery = searchParams.q?.toLowerCase();
-  const sortOption = searchParams.sort || 'newest';
-  const sizeFilter = searchParams.size;
+  const { category, q, sort, size } = await searchParams;
+  const categoryFilter = category;
+  const searchQuery = q?.toLowerCase();
+  const sortOption = sort || 'newest';
+  const sizeFilter = size;
   
   let products = await getProducts(categoryFilter);
   const categories = await getCategories();
@@ -64,7 +65,7 @@ export default async function ShopPage({
                   <input 
                     type="text" 
                     name="q"
-                    defaultValue={searchParams.q}
+                    defaultValue={q}
                     placeholder="Search products..." 
                     className="w-full pl-4 pr-10 py-2.5 bg-zinc-50 border border-zinc-200 rounded-lg focus:ring-2 focus:ring-zinc-900 focus:border-transparent outline-none text-sm transition-all"
                   />

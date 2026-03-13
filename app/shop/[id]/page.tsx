@@ -9,17 +9,19 @@ export default async function ProductDetailPage({
   params,
   searchParams
 }: { 
-  params: { id: string },
-  searchParams: { book?: string }
+  params: Promise<{ id: string }>,
+  searchParams: Promise<{ book?: string }>
 }) {
-  const product = await getProduct(params.id);
+  const { id } = await params;
+  const { book } = await searchParams;
+  const product = await getProduct(id);
   
   if (!product) {
     notFound();
   }
 
   // Determine if booking modal should be open via URL searchParams
-  const isBookingOpen = searchParams.book === 'true';
+  const isBookingOpen = book === 'true';
 
   // Fetch similar products (same category)
   const allInCategory = await getProducts(product.category);
