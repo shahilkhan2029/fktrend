@@ -14,6 +14,19 @@ cloudinary.config({
 // 1. Get Secret Signature for Client-Side Upload
 export async function getCloudinarySignature() {
   const timestamp = Math.round(new Date().getTime() / 1000);
+  
+  // In development, handle missing Cloudinary keys gracefully
+  if (!process.env.CLOUDINARY_API_SECRET || !process.env.CLOUDINARY_API_KEY) {
+    if (process.env.NODE_ENV === 'development') {
+      return {
+        signature: 'local_dev_mock',
+        timestamp,
+        cloudName: 'local',
+        apiKey: 'local',
+      };
+    }
+  }
+
   const signature = cloudinary.utils.api_sign_request(
     { timestamp, folder: 'fk_trend' },
     process.env.CLOUDINARY_API_SECRET!
@@ -168,6 +181,7 @@ export async function updateStoreSettings(formData: FormData) {
     const whatsapp = formData.get('whatsapp') as string;
     const address = formData.get('address') as string;
     const mapLocation = formData.get('mapLocation') as string;
+    const directionsUrl = formData.get('directionsUrl') as string;
     const instagramUrl = formData.get('instagramUrl') as string;
     const facebookUrl = formData.get('facebookUrl') as string;
     const youtubeUrl = formData.get('youtubeUrl') as string;
@@ -181,6 +195,7 @@ export async function updateStoreSettings(formData: FormData) {
         whatsapp,
         address,
         mapLocation,
+        directionsUrl,
         instagramUrl,
         facebookUrl,
         youtubeUrl,
@@ -193,6 +208,7 @@ export async function updateStoreSettings(formData: FormData) {
         whatsapp,
         address,
         mapLocation,
+        directionsUrl,
         instagramUrl,
         facebookUrl,
         youtubeUrl,

@@ -1,9 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Menu, X, Search, Heart, User, LogOut, ChevronDown } from 'lucide-react';
+import { Menu, X, Search, Heart, User, LogOut, ChevronDown, ChevronRight } from 'lucide-react';
 import { logoutUser } from '@/lib/actions';
 
 interface NavbarClientProps {
@@ -15,6 +15,27 @@ export default function NavbarClient({ user }: NavbarClientProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Close menu on route change
+  useEffect(() => {
+    setIsOpen(false);
+  }, [pathname]);
+
+  // Prevent body scroll when menu is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+  }, [isOpen]);
 
   // Do not show global navbar on admin routes
   if (pathname.startsWith('/admin')) {
@@ -29,22 +50,40 @@ export default function NavbarClient({ user }: NavbarClientProps) {
   };
 
   const categories = [
-    { name: 'T-Shirts', href: '/shop?category=T-Shirts' },
     { name: 'Shirts', href: '/shop?category=Shirts' },
+    { name: 'T-Shirts', href: '/shop?category=T-Shirts' },
     { name: 'Jeans', href: '/shop?category=Jeans' },
-    { name: 'Trousers', href: '/shop?category=Trousers' },
+    { name: 'Footwear', href: '/shop?category=Footwear' },
+    { name: 'Undergarments', href: '/shop?category=Undergarments' },
+    { name: 'Perfume', href: '/shop?category=Perfume' },
+    { name: 'Caps', href: '/shop?category=Caps' },
+    { name: 'Belts', href: '/shop?category=Belts' },
     { name: 'Accessories', href: '/shop?category=Accessories' },
   ];
 
   return (
     <>
-      <nav className="sticky top-0 z-50 w-full backdrop-blur-xl bg-white/80 border-b border-zinc-100 transition-all duration-300">
-        <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-          <Link href="/" className="font-serif text-xl font-black tracking-tighter text-zinc-900 group">
-            FK<span className="text-[var(--color-gold)]">.</span>TREND
-          </Link>
+      <nav 
+        className={`sticky top-0 z-50 w-full transition-all duration-300 ${
+          scrolled ? 'bg-white/95 backdrop-blur-md shadow-sm py-2' : 'bg-white py-4'
+        } border-b border-zinc-100`}
+      >
+        <div className="container-custom flex items-center justify-between">
+          <div className="flex items-center gap-4 lg:gap-8">
+            <button 
+              className="lg:hidden p-2 -ml-2 text-zinc-900 hover:text-[var(--color-gold)] transition-colors" 
+              onClick={toggleMenu} 
+              aria-label="Toggle menu"
+            >
+              <Menu size={24} />
+            </button>
+            <Link href="/" className="font-serif text-xl md:text-2xl font-black tracking-tighter text-zinc-900 group">
+              FK<span className="text-[var(--color-gold)]">.</span>TREND
+            </Link>
+          </div>
 
-          <div className="hidden md:flex items-center gap-10 absolute left-1/2 -translate-x-1/2">
+          {/* Desktop Menu */}
+          <div className="hidden lg:flex items-center gap-8">
             <Link href="/" className="text-[12px] font-bold uppercase tracking-widest text-zinc-900 hover:text-[var(--color-gold)] transition-colors">Home</Link>
             <Link href="/shop" className="text-[12px] font-bold uppercase tracking-widest text-zinc-900 hover:text-[var(--color-gold)] transition-colors">Shop</Link>
             
@@ -59,9 +98,7 @@ export default function NavbarClient({ user }: NavbarClientProps) {
                 className={`text-[12px] font-bold uppercase tracking-widest text-zinc-900 hover:text-[var(--color-gold)] transition-colors flex items-center gap-1 ${isDropdownOpen ? 'text-[var(--color-gold)]' : ''}`}
               >
                 Categories
-                <svg className={`w-3 h-3 transition-transform duration-300 ${isDropdownOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
+                <ChevronDown className={`w-3 h-3 transition-transform duration-300 ${isDropdownOpen ? 'rotate-180' : ''}`} />
               </Link>
               
               {/* Dropdown Menu */}
@@ -86,29 +123,29 @@ export default function NavbarClient({ user }: NavbarClientProps) {
             <Link href="/shop?badge=New" className="text-[12px] font-bold uppercase tracking-widest text-zinc-900 hover:text-[var(--color-gold)] transition-colors">New Arrivals</Link>
           </div>
 
-          <div className="flex items-center gap-1 md:gap-2">
-            <button className="p-2 text-zinc-900 hover:text-[var(--color-gold)] transition-colors">
-              <Search size={18} />
+          <div className="flex items-center gap-2 md:gap-4">
+            <button className="p-2 text-zinc-900 hover:text-[var(--color-gold)] transition-colors" aria-label="Search">
+              <Search size={20} />
             </button>
-            <button className="hidden sm:block p-2 text-zinc-900 hover:text-[var(--color-gold)] transition-colors">
-              <Heart size={18} />
+            <button className="hidden sm:block p-2 text-zinc-900 hover:text-[var(--color-gold)] transition-colors" aria-label="Favorites">
+              <Heart size={20} />
             </button>
             
             <div className="relative">
               {user ? (
                 <div 
-                  className="flex items-center gap-2 cursor-pointer p-2 hover:bg-zinc-50 rounded-lg transition-all"
+                  className="flex items-center gap-2 cursor-pointer p-1 hover:bg-zinc-50 rounded-full transition-all"
                   onMouseEnter={() => setIsUserMenuOpen(true)}
                   onMouseLeave={() => setIsUserMenuOpen(false)}
                 >
                   <div className="w-8 h-8 rounded-full bg-zinc-900 text-white flex items-center justify-center text-[10px] font-black">
                     {user.name.charAt(0).toUpperCase()}
                   </div>
-                  <ChevronDown size={14} className={`text-zinc-400 transition-transform duration-300 ${isUserMenuOpen ? 'rotate-180' : ''}`} />
+                  <ChevronDown size={14} className={`hidden md:block text-zinc-400 transition-transform duration-300 ${isUserMenuOpen ? 'rotate-180' : ''}`} />
                   
                   {/* User Dropdown */}
                   {isUserMenuOpen && (
-                    <div className="absolute right-0 top-full pt-2 w-48 animate-fade-in z-[60]">
+                    <div className="absolute right-0 top-full pt-2 w-48 animate-in fade-in slide-in-from-top-1 z-[60]">
                       <div className="bg-white border border-zinc-100 shadow-2xl rounded-2xl overflow-hidden py-2">
                         <div className="px-4 py-3 border-b border-zinc-50 mb-1">
                           <p className="text-[10px] font-black uppercase tracking-widest text-zinc-400">Signed in as</p>
@@ -131,42 +168,100 @@ export default function NavbarClient({ user }: NavbarClientProps) {
                   href="/login" 
                   className="p-2 text-zinc-900 hover:text-[var(--color-gold)] transition-colors flex items-center gap-2"
                 >
-                  <User size={18} />
+                  <User size={20} />
                   <span className="hidden lg:block text-[10px] font-black uppercase tracking-widest">Sign In</span>
                 </Link>
               )}
             </div>
-
-            <button className="md:hidden p-2 text-zinc-900 hover:text-[var(--color-gold)] transition-colors" onClick={toggleMenu} aria-label="Toggle menu">
-              {isOpen ? <X size={22} /> : <Menu size={22} />}
-            </button>
           </div>
         </div>
       </nav>
 
-      {/* Mobile Menu */}
-      <div className={`fixed inset-0 z-40 bg-white pt-24 px-8 md:hidden flex flex-col gap-6 transform transition-transform duration-500 ease-in-out ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}>
-        <Link href="/" className="text-2xl font-serif font-bold text-zinc-900 border-b border-zinc-100 pb-4" onClick={toggleMenu}>Home</Link>
-        <Link href="/shop" className="text-2xl font-serif font-bold text-zinc-900 border-b border-zinc-100 pb-4" onClick={toggleMenu}>Shop</Link>
-        <Link href="/categories" className="text-2xl font-serif font-bold text-zinc-900 border-b border-zinc-100 pb-4" onClick={toggleMenu}>Categories</Link>
-        
-        {user ? (
-          <>
-            <Link href="/profile" className="text-2xl font-serif font-bold text-zinc-900 border-b border-zinc-100 pb-4" onClick={toggleMenu}>My Profile</Link>
-            <Link href="/bookings" className="text-2xl font-serif font-bold text-zinc-900 border-b border-zinc-100 pb-4" onClick={toggleMenu}>My Bookings</Link>
-            <button 
-              onClick={handleLogout}
-              className="text-2xl font-serif font-bold text-red-500 text-left border-b border-zinc-100 pb-4"
-            >
-              Logout
+      {/* Mobile Sliding Navigation Backdrop */}
+      <div 
+        className={`fixed inset-0 z-50 bg-black/40 backdrop-blur-sm transition-opacity duration-300 lg:hidden ${
+          isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
+        }`}
+        onClick={toggleMenu}
+      />
+
+      {/* Mobile Sliding Navigation Panel */}
+      <div 
+        className={`fixed inset-y-0 left-0 z-[60] w-[80%] max-w-[320px] bg-white shadow-2xl transform transition-transform duration-500 ease-soft lg:hidden ${
+          isOpen ? 'translate-x-0' : '-translate-x-full'
+        }`}
+      >
+        <div className="flex flex-col h-full">
+          <div className="p-6 border-b border-zinc-100 flex items-center justify-between">
+            <span className="font-serif text-xl font-black tracking-tighter">FK.TREND</span>
+            <button onClick={toggleMenu} className="p-2 -mr-2 text-zinc-400 hover:text-zinc-900 transition-colors">
+              <X size={24} />
             </button>
-          </>
-        ) : (
-          <>
-            <Link href="/login" className="text-2xl font-serif font-bold text-zinc-900 border-b border-zinc-100 pb-4" onClick={toggleMenu}>Sign In</Link>
-            <Link href="/register" className="text-2xl font-serif font-bold text-zinc-900 border-b border-zinc-100 pb-4" onClick={toggleMenu}>Create Account</Link>
-          </>
-        )}
+          </div>
+
+          <div className="flex-1 overflow-y-auto py-8 px-6 space-y-8">
+            <div className="space-y-6">
+              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400">Navigation</p>
+              <div className="flex flex-col gap-4">
+                <Link href="/" className="text-xl font-bold text-zinc-900 flex items-center justify-between group">
+                  Home <ChevronRight size={18} className="text-zinc-300 group-hover:text-zinc-900 transition-colors" />
+                </Link>
+                <Link href="/shop" className="text-xl font-bold text-zinc-900 flex items-center justify-between group">
+                  Shop <ChevronRight size={18} className="text-zinc-300 group-hover:text-zinc-900 transition-colors" />
+                </Link>
+                <Link href="/shop?badge=New" className="text-xl font-bold text-zinc-900 flex items-center justify-between group">
+                  New Arrivals <ChevronRight size={18} className="text-zinc-300 group-hover:text-zinc-900 transition-colors" />
+                </Link>
+              </div>
+            </div>
+
+            <div className="space-y-6">
+              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400">Collections</p>
+              <div className="grid grid-cols-1 gap-3">
+                {categories.map(cat => (
+                  <Link 
+                    key={cat.name} 
+                    href={cat.href}
+                    className="flex items-center justify-between px-4 py-3 bg-zinc-50 rounded-xl text-sm font-bold text-zinc-700 hover:text-zinc-900 hover:bg-zinc-100 transition-all"
+                  >
+                    {cat.name}
+                    <ChevronRight size={14} className="text-zinc-300" />
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            {user ? (
+              <div className="space-y-6">
+                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400">Account</p>
+                <div className="flex flex-col gap-4">
+                  <Link href="/profile" className="text-lg font-bold text-zinc-700">My Profile</Link>
+                  <Link href="/bookings" className="text-lg font-bold text-zinc-700">My Bookings</Link>
+                  <button onClick={handleLogout} className="text-lg font-bold text-red-500 text-left">Logout</button>
+                </div>
+              </div>
+            ) : (
+              <div className="pt-4 border-t border-zinc-100 space-y-4">
+                <Link 
+                  href="/login" 
+                  className="block w-full text-center bg-zinc-900 text-white font-bold py-4 rounded-xl shadow-lg shadow-zinc-900/10"
+                >
+                  Sign In
+                </Link>
+                <Link 
+                  href="/register" 
+                  className="block w-full text-center bg-white border border-zinc-200 text-zinc-900 font-bold py-4 rounded-xl"
+                >
+                  Create Account
+                </Link>
+              </div>
+            )}
+          </div>
+
+          <div className="p-6 bg-zinc-50 border-t border-zinc-100">
+            <p className="text-[10px] text-zinc-400 text-center uppercase tracking-widest">&copy; 2024 FK TREND</p>
+          </div>
+        </div>
       </div>
     </>
   );

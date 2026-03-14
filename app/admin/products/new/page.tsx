@@ -7,9 +7,24 @@ import { uploadToCloudinary } from '@/lib/cloudinary-client';
 import { ImagePlus, X, ChevronLeft } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import CustomSelect from '@/components/admin/CustomSelect';
 
-const AVAILABLE_SIZES = ['XS', 'S', 'M', 'L', 'XL', 'XXL', '3XL', 'Free Size'];
-const CATEGORIES = ['Shirts', 'T-Shirts', 'Jeans', 'Kurtas', 'Jackets', 'Ethnic Wear', 'Accessories'];
+const CATEGORIES = ['Shirts', 'T-Shirts', 'Jeans', 'Kurtas', 'Jackets', 'Ethnic Wear', 'Footwear', 'Undergarments', 'Perfume', 'Caps', 'Belts', 'Accessories'];
+
+const CATEGORY_SIZES: Record<string, string[]> = {
+  'Shirts': ['XS', 'S', 'M', 'L', 'XL', 'XXL', '3XL', 'Free Size'],
+  'T-Shirts': ['XS', 'S', 'M', 'L', 'XL', 'XXL', '3XL', 'Free Size'],
+  'Jeans': ['28', '30', '32', '34', '36', '38', '40'],
+  'Kurtas': ['S', 'M', 'L', 'XL', 'XXL', '3XL', 'Free Size'],
+  'Jackets': ['S', 'M', 'L', 'XL', 'XXL', '3XL'],
+  'Ethnic Wear': ['S', 'M', 'L', 'XL', 'XXL', 'Free Size'],
+  'Footwear': ['6', '7', '8', '9', '10', '11'],
+  'Undergarments': ['S', 'M', 'L', 'XL', 'XXL'],
+  'Perfume': ['50ml', '100ml', '150ml', '200ml'],
+  'Caps': ['Free Size'],
+  'Belts': ['30', '32', '34', '36', '38', '40', 'Free Size'],
+  'Accessories': ['Free Size']
+};
 
 export default function AddProductPage() {
   const router = useRouter();
@@ -120,7 +135,7 @@ export default function AddProductPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           
           {/* Main Info */}
-          <div className="lg:col-span-2 space-y-6 bg-white p-8 rounded-2xl shadow-sm border border-zinc-100">
+          <div className="lg:col-span-2 space-y-6 bg-white p-5 md:p-8 rounded-2xl shadow-sm border border-zinc-100">
             <div>
               <label className="block text-sm font-medium text-zinc-700 mb-2">Product Title</label>
               <input 
@@ -161,20 +176,20 @@ export default function AddProductPage() {
 
           {/* Sidebar Info */}
           <div className="space-y-6">
-            <div className="bg-white p-6 rounded-2xl shadow-sm border border-zinc-100">
-              <label className="block text-sm font-medium text-zinc-700 mb-3">Category</label>
-              <select 
-                value={category} onChange={e => setCategory(e.target.value)}
-                className="w-full px-4 py-3 bg-zinc-50 border border-zinc-200 rounded-xl focus:ring-2 focus:ring-zinc-900 outline-none"
-              >
-                {CATEGORIES.map(cat => <option key={cat}>{cat}</option>)}
-              </select>
-            </div>
+            <CustomSelect 
+              label="Category"
+              value={category}
+              options={CATEGORIES}
+              onChange={(val) => {
+                setCategory(val);
+                setSelectedSizes([]);
+              }}
+            />
 
-            <div className="bg-white p-6 rounded-2xl shadow-sm border border-zinc-100">
+            <div className="bg-white p-5 md:p-6 rounded-2xl shadow-sm border border-zinc-100 overflow-hidden">
               <label className="block text-sm font-medium text-zinc-700 mb-3">Available Sizes</label>
               <div className="flex flex-wrap gap-2">
-                {AVAILABLE_SIZES.map(size => (
+                {CATEGORY_SIZES[category]?.map((size: string) => (
                   <button
                     key={size}
                     type="button"
@@ -191,7 +206,7 @@ export default function AddProductPage() {
         </div>
 
         {/* Images Upload */}
-        <div className="bg-white p-8 rounded-2xl shadow-sm border border-zinc-100">
+        <div className="bg-white p-5 md:p-8 rounded-2xl shadow-sm border border-zinc-100">
           <label className="block text-sm font-medium text-zinc-700 mb-4">Product Images ({images.length} uploaded)</label>
           
           <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-4">

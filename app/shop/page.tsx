@@ -87,7 +87,7 @@ export default async function ShopPage({
               <div className="mb-8">
                 <h3 className="font-semibold text-zinc-900 mb-4 tracking-wide uppercase text-sm">Size</h3>
                 <div className="flex flex-wrap gap-2">
-                  {['S', 'M', 'L', 'XL', 'XXL', '30', '32', '34', '36', 'Free Size'].map(size => {
+                  {['S', 'M', 'L', 'XL', 'XXL', '3XL', '30', '32', '34', '36', '6', '7', '8', '9', '10', '11', 'Free Size'].map(size => {
                     const params = new URLSearchParams();
                     if (categoryFilter) params.set('category', categoryFilter);
                     if (sortOption && sortOption !== 'newest') params.set('sort', sortOption);
@@ -143,7 +143,7 @@ export default async function ShopPage({
           {/* Product Grid */}
           <main className="lg:w-3/4">
             {products.length > 0 ? (
-              <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
                 {products.map(product => (
                   <ProductCard
                     key={product.id}

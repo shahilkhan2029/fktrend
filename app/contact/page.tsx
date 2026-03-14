@@ -4,11 +4,12 @@ import { getStoreSettings } from '@/lib/actions';
 export default async function ContactPage() {
   const settings = await getStoreSettings();
 
-  const address = settings?.address || '123 Fashion Street, Style District, City, Country 12345';
-  const phone = settings?.phone || '+1 (234) 567-8900';
-  const whatsapp = settings?.whatsapp || '12345678900';
-  const email = settings?.email || 'hello@fktrend.com';
-  const mapSrc = settings?.mapLocation || "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d113941.01166415712!2d80.84158485744474!3d26.81977717438497!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x399bfd991f32b16b%3A0x93ccba8909978be7!2sLucknow%2C%20Uttar%20Pradesh!5e0!3m2!1sen!2sin!4v1709477793444!5m2!1sen!2sin";
+  const address = settings?.address || 'Fatehpur, Rajasthan 332301';
+  const phone = settings?.phone || '+91 61773421289081';
+  const whatsapp = settings?.whatsapp || '9161773421289081';
+  const email = settings?.email || 'fk.trend.shop@gmail.com';
+  const mapSrc = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3543.2506039414225!2d75.406215!3d27.367887900000003!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x396ced000f08dce1%3A0x80b79900c7444b0c!2sFK%20TREND!5e0!3m2!1sen!2sin!4v1773512990080!5m2!1sen!2sin";
+  const directionsUrl = (settings as any)?.directionsUrl || "https://maps.app.goo.gl/ZVZk66iXV5EsGK5WA";
 
   return (
     <div className="bg-white min-h-screen py-16">
@@ -77,17 +78,41 @@ export default async function ContactPage() {
               </div>
             </div>
 
-            <div className="h-64 rounded-2xl overflow-hidden shadow-sm bg-zinc-200">
-              <iframe 
-                src={mapSrc} 
-                width="100%" 
-                height="100%" 
-                style={{border: 0}} 
-                allowFullScreen={true} 
-                loading="lazy" 
-                referrerPolicy="no-referrer-when-downgrade"
-                className="grayscale"
-              />
+            <div className={`h-64 rounded-2xl overflow-hidden shadow-sm bg-zinc-200 relative group ${!mapSrc.includes('google.com/maps/embed') ? 'flex items-center justify-center p-6' : ''}`}>
+              {mapSrc.includes('google.com/maps/embed') ? (
+                <>
+                  <iframe 
+                    src={mapSrc} 
+                    width="100%" 
+                    height="100%" 
+                    style={{border: 0}} 
+                    allowFullScreen={true} 
+                    loading="lazy" 
+                    referrerPolicy="no-referrer-when-downgrade"
+                    className="grayscale group-hover:grayscale-0 transition-all duration-700"
+                  />
+                  <a 
+                    href={directionsUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="absolute bottom-4 right-4 bg-zinc-900 text-white px-6 py-2 rounded-full font-bold uppercase tracking-widest text-[9px] shadow-xl opacity-0 group-hover:opacity-100 transition-all transform translate-y-2 group-hover:translate-y-0"
+                  >
+                    Get Directions
+                  </a>
+                </>
+              ) : (
+                <div className="text-center">
+                  <p className="text-zinc-500 text-[10px] uppercase font-black tracking-widest mb-3 italic">Map Location</p>
+                  <a 
+                    href={directionsUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-block bg-zinc-950 text-white px-5 py-2 rounded-full text-[9px] font-black uppercase tracking-widest"
+                  >
+                    View on Maps
+                  </a>
+                </div>
+              )}
             </div>
           </div>
 

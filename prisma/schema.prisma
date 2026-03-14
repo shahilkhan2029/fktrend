@@ -3,8 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider = "sqlite"
+  url      = "file:./dev.db"
 }
 
 model Product {
@@ -51,6 +51,7 @@ model StoreSettings {
   whatsapp      String?
   address       String?
   mapLocation   String?  // Google Maps Embed URL
+  directionsUrl String?  // External Google Maps Link
   instagramUrl  String?
   facebookUrl   String?
   youtubeUrl    String?

@@ -10,39 +10,59 @@ export default async function Home() {
   const categories = await getCategories();
   const settings = await getStoreSettings();
 
-  const address = settings?.address || '123 Fashion Street, City, Country';
-  const mapSrc = settings?.mapLocation || "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d113941.01166415712!2d80.84158485744474!3d26.81977717438497!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x399bfd991f32b16b%3A0x93ccba8909978be7!2sLucknow%2C%20Uttar%20Pradesh!5e0!3m2!1sen!2sin!4v1709477793444!5m2!1sen!2sin";
+  const address = settings?.address || 'Fatehpur, Rajasthan 332301';
+  const mapSrc = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3543.2506039414225!2d75.406215!3d27.367887900000003!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x396ced000f08dce1%3A0x80b79900c7444b0c!2sFK%20TREND!5e0!3m2!1sen!2sin!4v1773512990080!5m2!1sen!2sin";
+  const directionsUrl = (settings as any)?.directionsUrl || "https://maps.app.goo.gl/ZVZk66iXV5EsGK5WA";
 
   return (
     <div className="flex flex-col min-h-screen">
-      {/* Hero Section */}
-      <section className="relative h-[80vh] flex items-center overflow-hidden bg-zinc-900 group">
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=2070')] bg-cover bg-center opacity-60 transition-transform duration-1000 group-hover:scale-105" />
-        <div className="absolute inset-0 bg-gradient-to-r from-black via-black/40 to-transparent" />
-        <div className="container mx-auto px-4 relative z-10">
+      {/* Hero Section - Redesigned */}
+      <section className="relative h-[80vh] md:h-[90vh] flex items-center overflow-hidden bg-zinc-900">
+        <div className="absolute inset-0 z-0">
+          <Image 
+            src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=2000&auto=format&fit=crop"
+            alt="Hero Background"
+            fill
+            className="object-cover opacity-60"
+            priority
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-black via-black/40 to-transparent" />
+        </div>
+
+        <div className="container-custom relative z-10">
           <div className="max-w-3xl">
-            <span className="inline-block text-[var(--color-gold)] font-black uppercase tracking-[0.5em] mb-8 animate-fade-in text-sm">
-              New Collection 2026
-            </span>
-            <h1 className="text-6xl md:text-8xl lg:text-9xl font-serif font-black text-white leading-none mb-10 tracking-tighter animate-slide-up">
-              FK<span className="text-[var(--color-gold)]">.</span>TREND <br />
-              <span className="text-zinc-400">GENTS</span>
+            <div className="inline-flex items-center gap-3 px-4 py-2 bg-white/10 backdrop-blur-md rounded-full border border-white/20 mb-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+              <span className="w-2 h-2 rounded-full bg-[var(--color-gold)] animate-pulse" />
+              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-white">Spring Summer Collection 2024</span>
+            </div>
+            
+            <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif font-black text-white leading-[0.9] tracking-tighter mb-8 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-100">
+              CRAFTED<br />
+              FOR THE<br />
+              <span className="text-[var(--color-gold)]">MODERN</span> MAN
             </h1>
-            <p className="text-xl text-zinc-300 mb-12 max-w-xl leading-relaxed animate-fade-in delay-500 font-medium">
-              Discover the art of fine tailoring and premium menswear. Our digital showroom allows you to reserve exclusive pieces before visiting our physical store.
-            </p>
-            <div className="flex flex-wrap gap-6 animate-fade-in delay-700">
-              <Link href="/shop" className="bg-white text-black px-12 py-5 rounded-full font-black uppercase tracking-widest hover:bg-[var(--color-gold)] hover:text-white transition-all transform hover:-translate-y-1 shadow-2xl">
-                Explore Shop
+            
+            <div className="flex flex-col sm:flex-row gap-4 animate-in fade-in slide-in-from-bottom-16 duration-1000 delay-300">
+              <Link 
+                href="/shop" 
+                className="group relative px-10 py-5 bg-white text-zinc-900 font-black rounded-2xl overflow-hidden transition-all duration-500 hover:scale-105 active:scale-95 text-center"
+              >
+                <span className="relative z-10 text-[11px] uppercase tracking-[0.2em]">Explore Collection</span>
+                <div className="absolute inset-0 bg-[var(--color-gold)] translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
               </Link>
-              <Link href="/categories" className="border-2 border-white/30 text-white backdrop-blur-sm px-12 py-5 rounded-full font-black uppercase tracking-widest hover:bg-white hover:text-black transition-all transform hover:-translate-y-1">
-                Categories
+              <Link 
+                href="/categories" 
+                className="px-10 py-5 bg-white/5 backdrop-blur-md border border-white/20 text-white font-black rounded-2xl transition-all duration-500 hover:bg-white/10 text-center"
+              >
+                <span className="text-[11px] uppercase tracking-[0.2em]">View Lookbook</span>
               </Link>
             </div>
           </div>
         </div>
-        <div className="absolute bottom-12 left-1/2 -translate-x-1/2 animate-bounce">
-          <div className="w-0.5 h-16 bg-gradient-to-b from-transparent via-white/50 to-white" />
+        
+        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 text-white/40 flex flex-col items-center gap-4 animate-bounce">
+          <span className="text-[9px] font-black uppercase tracking-[0.5em] rotate-90 origin-left translate-x-1.5 translate-y-4">Scroll</span>
+          <div className="w-px h-12 bg-gradient-to-b from-white/40 to-transparent" />
         </div>
       </section>
 
@@ -178,22 +198,42 @@ export default async function Home() {
                 </div>
               </div>
               <div>
-                <Link href="/contact" className="inline-block border-2 border-zinc-900 text-zinc-900 px-8 py-3 rounded-full font-medium hover:bg-zinc-900 hover:text-white transition-colors">
+                <a 
+                  href={directionsUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-block border-2 border-zinc-900 text-zinc-900 px-8 py-3 rounded-full font-black uppercase tracking-widest text-[10px] hover:bg-zinc-900 hover:text-white transition-all transform active:scale-95"
+                >
                   Get Directions
-                </Link>
+                </a>
               </div>
             </div>
-            <div className="lg:w-1/2 min-h-[400px] bg-zinc-200 relative">
-               <iframe 
-                  src={mapSrc} 
-                  width="100%" 
-                  height="100%" 
-                  style={{border: 0}} 
-                  allowFullScreen={true} 
-                  loading="lazy" 
-                  referrerPolicy="no-referrer-when-downgrade"
-                  className="absolute inset-0 grayscale hover:grayscale-0 transition-all duration-700"
-                />
+            <div className={`lg:w-1/2 min-h-[400px] bg-zinc-200 relative ${!mapSrc.includes('google.com/maps/embed') ? 'p-10 flex items-center justify-center' : ''}`}>
+               {mapSrc.includes('google.com/maps/embed') ? (
+                 <iframe 
+                    src={mapSrc}
+                    width="100%" 
+                    height="100%" 
+                    style={{border: 0}} 
+                    allowFullScreen={true} 
+                    loading="lazy" 
+                    referrerPolicy="no-referrer-when-downgrade"
+                    className="absolute inset-0 grayscale hover:grayscale-0 transition-all duration-700"
+                  />
+               ) : (
+                  <div className="text-center space-y-4">
+                    <MapPin size={48} className="mx-auto text-zinc-400 mb-4" />
+                    <p className="text-zinc-500 font-serif italic">Viewing map at {address}</p>
+                    <a 
+                      href={directionsUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-block bg-zinc-900 text-white px-6 py-2 rounded-full text-[9px] font-black uppercase tracking-widest"
+                    >
+                      Open in Google Maps
+                    </a>
+                  </div>
+               )}
             </div>
           </div>
         </div>

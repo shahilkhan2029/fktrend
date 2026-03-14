@@ -53,6 +53,26 @@ export async function uploadToCloudinary(file: File, signatureData: { signature:
   const formData = new FormData();
   // Rename to .webp so Cloudinary handles it correctly
   formData.append('file', compressedBlob, file.name.replace(/\.[^/.]+$/, "") + ".webp");
+
+  // Check if we are in local development
+  const isLocal = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+
+  if (isLocal) {
+    const res = await fetch('/api/upload', {
+      method: 'POST',
+      body: formData,
+    });
+
+    if (!res.ok) {
+      const error = await res.json();
+      throw new Error(error.error || 'Local upload failed');
+    }
+
+    const data = await res.json();
+    return data.secure_url as string;
+  }
+
+  // Production - Cloudinary
   formData.append('signature', signatureData.signature);
   formData.append('timestamp', signatureData.timestamp.toString());
   formData.append('api_key', signatureData.apiKey);
