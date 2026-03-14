@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache';
 import prisma from './prisma';
 import bcrypt from 'bcryptjs';
 import { signUserToken, getSession } from './auth';
+import { SignJWT } from 'jose';
 import { cookies } from 'next/headers';
 
 function safeParseJSON(str: string | null | undefined): string[] {
@@ -234,7 +235,32 @@ export async function loginUser(formData: FormData) {
       return { success: false, error: 'All fields are required.' };
     }
 
-    // Find user
+    // --- ADMIN LOGIN CHECK ---
+    const ADMIN_USER = process.env.ADMIN_USER || 'admin';
+    const ADMIN_PASS = process.env.ADMIN_PASS || 'fktrend123';
+    const ADMIN_SECRET = new TextEncoder().encode(process.env.ADMIN_PASS || 'fktrend123');
+
+    if (emailOrPhone === ADMIN_USER && password === ADMIN_PASS) {
+      // Create Admin JWT
+      const token = await new SignJWT({ user: ADMIN_USER })
+        .setProtectedHeader({ alg: 'HS256' })
+        .setIssuedAt()
+        .setExpirationTime('24h')
+        .sign(ADMIN_SECRET);
+
+      const cookieStore = await cookies();
+      cookieStore.set('admin_token', token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        maxAge: 60 * 60 * 24, // 24 hours
+        path: '/',
+      });
+
+      return { success: true, isAdmin: true };
+    }
+
+    // --- REGULAR USER LOGIN ---
     const user = await prisma.user.findFirst({
       where: {
         OR: [{ email: emailOrPhone }, { phone: emailOrPhone }]

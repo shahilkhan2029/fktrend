@@ -20,7 +20,11 @@ export default function LoginPage() {
     const res = await loginUser(formData);
 
     if (res.success) {
-      router.push('/');
+      if ((res as any).isAdmin) {
+        router.push('/admin');
+      } else {
+        router.push('/');
+      }
       router.refresh();
     } else {
       setError(res.error || 'Invalid identifier or password');

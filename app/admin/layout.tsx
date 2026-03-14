@@ -25,9 +25,7 @@ export default function AdminLayout({
     setIsSidebarOpen(false);
   }, [pathname]);
 
-  if (pathname === '/admin/login') {
-    return <div className="min-h-screen bg-zinc-50">{children}</div>;
-  }
+  // Removed /admin/login check as it is unified with /login now
 
   const navItems = [
     { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },

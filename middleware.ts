@@ -7,11 +7,11 @@ const SECRET_KEY = new TextEncoder().encode(process.env.ADMIN_PASS || 'fktrend12
 export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
   
-  if (path.startsWith('/admin') && !path.startsWith('/admin/login')) {
+  if (path.startsWith('/admin')) {
     const token = request.cookies.get('admin_token')?.value;
     
     if (!token) {
-      return NextResponse.redirect(new URL('/admin/login', request.url));
+      return NextResponse.redirect(new URL('/login', request.url));
     }
     
     try {
@@ -19,12 +19,12 @@ export async function middleware(request: NextRequest) {
       return NextResponse.next();
     } catch (err) {
       // Invalid token
-      return NextResponse.redirect(new URL('/admin/login', request.url));
+      return NextResponse.redirect(new URL('/login', request.url));
     }
   }
   
-  // Prevent logged in users from seeing login page
-  if (path === '/admin/login') {
+  // Prevent logged in admins from seeing login page
+  if (path === '/login') {
     const token = request.cookies.get('admin_token')?.value;
     if (token) {
       try {
@@ -40,5 +40,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: '/admin/:path*',
+  matcher: ['/admin/:path*', '/login'],
 };
