@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { LogIn, Mail, Lock, ArrowRight } from 'lucide-react';
 import { loginUser } from '@/lib/actions';
@@ -41,8 +42,11 @@ export default function LoginPage() {
         </div>
         
         <div className="text-center mb-10">
+          <div className="flex justify-center mb-4">
+            <Image src="/logo.svg" alt="FK TREND" width={120} height={30} className="h-8 w-auto" />
+          </div>
           <h1 className="text-3xl font-serif font-black text-zinc-900 mb-2 tracking-tight">Welcome Back</h1>
-          <p className="text-zinc-500 text-sm">Sign in to your FK Trend account</p>
+          <p className="text-zinc-500 text-sm">Sign in to your account</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-5">

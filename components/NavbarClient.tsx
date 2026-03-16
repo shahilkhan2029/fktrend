@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import Image from 'next/image';
 import { Menu, X, Search, Heart, User, LogOut, ChevronDown, ChevronRight } from 'lucide-react';
 import { logoutUser } from '@/lib/actions';
 
@@ -77,8 +78,15 @@ export default function NavbarClient({ user }: NavbarClientProps) {
             >
               <Menu size={24} />
             </button>
-            <Link href="/" className="font-serif text-xl md:text-2xl font-black tracking-tighter text-zinc-900 group">
-              FK<span className="text-[var(--color-gold)]">.</span>TREND
+            <Link href="/" className="flex items-center">
+              <Image 
+                src="/logo.svg" 
+                alt="FK TREND" 
+                width={160} 
+                height={40} 
+                className="h-8 md:h-9 w-auto object-contain"
+                priority
+              />
             </Link>
           </div>
 
@@ -193,7 +201,15 @@ export default function NavbarClient({ user }: NavbarClientProps) {
       >
         <div className="flex flex-col h-full">
           <div className="p-6 border-b border-zinc-100 flex items-center justify-between">
-            <span className="font-serif text-xl font-black tracking-tighter">FK.TREND</span>
+            <Link href="/" onClick={toggleMenu}>
+              <Image 
+                src="/logo.svg" 
+                alt="FK TREND" 
+                width={120} 
+                height={30} 
+                className="h-7 w-auto object-contain"
+              />
+            </Link>
             <button onClick={toggleMenu} className="p-2 -mr-2 text-zinc-400 hover:text-zinc-900 transition-colors">
               <X size={24} />
             </button>

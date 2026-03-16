@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { LayoutDashboard, ShoppingBag, CalendarCheck, Settings, LogOut, Menu, X, ChevronRight } from 'lucide-react';
 
@@ -51,9 +52,15 @@ export default function AdminLayout({
         } flex flex-col border-r border-white/5 shadow-2xl`}
       >
         <div className="h-20 md:h-24 flex items-center px-6 md:px-8 border-b border-white/5">
-          <Link href="/" className="group flex items-center gap-2">
-            <span className="font-serif text-xl md:text-2xl font-black tracking-tighter">FK<span className="text-[var(--color-gold)]">.</span>TREND</span>
-            <span className="bg-white/10 text-[8px] md:text-[9px] font-black uppercase tracking-[0.2em] px-2 py-1 rounded-md text-[var(--color-gold)]">Admin</span>
+          <Link href="/" className="group flex flex-col gap-1">
+            <Image 
+              src="/logo.svg" 
+              alt="FK TREND" 
+              width={140} 
+              height={35} 
+              className="h-7 md:h-8 w-auto brightness-0 invert"
+            />
+            <span className="bg-white/10 w-fit text-[8px] md:text-[9px] font-black uppercase tracking-[0.2em] px-2 py-0.5 rounded-md text-[var(--color-gold)]">Admin</span>
           </Link>
         </div>
         

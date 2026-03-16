@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { UserPlus, Mail, Phone, Lock, User, ArrowRight } from 'lucide-react';
 import { registerUser } from '@/lib/actions';
@@ -37,8 +38,11 @@ export default function RegisterPage() {
         </div>
         
         <div className="text-center mb-10">
+          <div className="flex justify-center mb-4">
+            <Image src="/logo.svg" alt="FK TREND" width={120} height={30} className="h-8 w-auto" />
+          </div>
           <h1 className="text-3xl font-serif font-black text-zinc-900 mb-2 tracking-tight">Create Account</h1>
-          <p className="text-zinc-500 text-sm">Join FK Trend for a premium fashion experience</p>
+          <p className="text-zinc-500 text-sm">Join us for a premium fashion experience</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-5">

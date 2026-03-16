@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { Instagram, Facebook, MapPin, Phone, MessageCircle, Youtube } from 'lucide-react';
 import { getStoreSettings } from '@/lib/actions';
 
@@ -13,7 +14,15 @@ export default async function Footer() {
     <footer className="bg-zinc-900 text-zinc-300 py-16">
       <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-12">
         <div>
-          <h3 className="font-serif text-2xl font-bold text-white mb-6">FK Trend</h3>
+          <div className="mb-6">
+            <Image 
+              src="/logo.svg" 
+              alt="FK TREND" 
+              width={150} 
+              height={40} 
+              className="h-8 w-auto brightness-0 invert"
+            />
+          </div>
           <p className="text-sm leading-relaxed mb-6">
             Premium fashion near you. Explore our digital showroom and reserve your favorite styles before visiting the store.
           </p>
