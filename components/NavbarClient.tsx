@@ -82,9 +82,9 @@ export default function NavbarClient({ user }: NavbarClientProps) {
               <Image 
                 src="/logo.svg" 
                 alt="FK TREND" 
-                width={160} 
-                height={40} 
-                className="h-8 md:h-9 w-auto object-contain"
+                width={200} 
+                height={60} 
+                className="h-10 md:h-14 w-auto object-contain"
                 priority
               />
             </Link>
@@ -205,9 +205,9 @@ export default function NavbarClient({ user }: NavbarClientProps) {
               <Image 
                 src="/logo.svg" 
                 alt="FK TREND" 
-                width={120} 
-                height={30} 
-                className="h-7 w-auto object-contain"
+                width={140} 
+                height={40} 
+                className="h-10 w-auto object-contain"
               />
             </Link>
             <button onClick={toggleMenu} className="p-2 -mr-2 text-zinc-400 hover:text-zinc-900 transition-colors">

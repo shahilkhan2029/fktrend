@@ -5,8 +5,8 @@ export default function AboutPage() {
     <div className="bg-white min-h-screen">
       {/* Header */}
       <div className="bg-zinc-900 text-white py-20 text-center px-4">
-        <div className="flex justify-center mb-6">
-          <Image src="/logo.svg" alt="FK TREND" width={200} height={50} className="h-10 md:h-12 w-auto brightness-0 invert" />
+        <div className="flex justify-center mb-8">
+          <Image src="/logo.svg" alt="FK TREND" width={300} height={80} className="h-16 md:h-24 w-auto brightness-0 invert" />
         </div>
         <p className="text-lg text-zinc-400 max-w-2xl mx-auto">
           Redefining premium fashion with exceptional quality and a seamless shopping experience.

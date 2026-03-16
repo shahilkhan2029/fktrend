@@ -18,9 +18,9 @@ export default async function Footer() {
             <Image 
               src="/logo.svg" 
               alt="FK TREND" 
-              width={150} 
-              height={40} 
-              className="h-8 w-auto brightness-0 invert"
+              width={180} 
+              height={50} 
+              className="h-12 w-auto brightness-0 invert"
             />
           </div>
           <p className="text-sm leading-relaxed mb-6">

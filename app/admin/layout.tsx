@@ -56,9 +56,9 @@ export default function AdminLayout({
             <Image 
               src="/logo.svg" 
               alt="FK TREND" 
-              width={140} 
-              height={35} 
-              className="h-7 md:h-8 w-auto brightness-0 invert"
+              width={160} 
+              height={45} 
+              className="h-9 md:h-12 w-auto brightness-0 invert"
             />
             <span className="bg-white/10 w-fit text-[8px] md:text-[9px] font-black uppercase tracking-[0.2em] px-2 py-0.5 rounded-md text-[var(--color-gold)]">Admin</span>
           </Link>
