@@ -220,8 +220,8 @@ export async function updateStoreSettings(formData: FormData) {
     revalidatePath('/contact');
     revalidatePath('/admin/settings');
     return { success: true };
-  } catch (err) {
-    console.error(err);
-    return { success: false, error: 'Failed to update settings' };
+  } catch (err: any) {
+    console.error('UPDATE SETTINGS ERROR:', err);
+    return { success: false, error: err.message || 'Failed to update settings' };
   }
 }
