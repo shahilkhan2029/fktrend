@@ -12,6 +12,9 @@ export const metadata: Metadata = {
   title: 'FK TREND | Gents Luxury Fashion & Tailoring',
   description: 'Discover the pinnacle of gentlemen\'s fashion at FK TREND. Premium shirts, trousers, and custom tailoring for the modern man.',
   keywords: 'gents fashion, luxury clothing, men style, tailoring, premium shirts',
+  icons: {
+    icon: '/favicon.svg',
+  },
 };
 
 export default function RootLayout({
